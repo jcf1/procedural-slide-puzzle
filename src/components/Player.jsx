@@ -19,13 +19,12 @@ export default class Player extends Component {
         switch(this.props.direction) {
             case UP:
                 bounds = 0;
-
                 if(pos.top <= bounds) {
                     console.log("DIE UP");
                     this.props.playerDeath();
                 } else if((pos.left === goal.left) && (pos.top === (goal.top + size.height))) {
                     console.log("WIN UP");
-                    this.props.playerDeath();
+                    this.props.win();
                 } else {
                     for(i = 0; i < blocks.length; i++) {
                         block = blocks[i];
@@ -38,13 +37,12 @@ export default class Player extends Component {
                 break;
             case LEFT:
                 bounds = 0;
-
                 if(pos.left <= bounds) {
                     console.log("DIE LEFT");
                     this.props.playerDeath();
                 } else if((pos.top === goal.top) && (pos.left === (goal.left + size.width))) {
                     console.log("WIN LEFT");
-                    this.props.playerDeath();
+                    this.props.win();
                 } else {
                     for(i = 0; i < blocks.length; i++) {
                         block = blocks[i];
@@ -57,13 +55,12 @@ export default class Player extends Component {
                 break;
             case RIGHT:
                 bounds = 100;
-
                 if((pos.left + size.width) >= bounds) {
                     console.log("DIE RIGHT");
                     this.props.playerDeath();
                 } else if((pos.top === goal.top) && ((pos.left + size.width) === goal.left)) {
                     console.log("WIN RIGHT");
-                    this.props.playerDeath();
+                    this.props.win();
                 } else {
                     for(i = 0; i < blocks.length; i++) {
                         block = blocks[i];
@@ -76,13 +73,12 @@ export default class Player extends Component {
                 break;
             case DOWN:
                 bounds = 100;
-
                 if((pos.top + size.height) >= bounds) {
                     console.log("DIE DOWN");
                     this.props.playerDeath();
                 } else if((pos.left === goal.left) && ((pos.top + size.height) === goal.top)) {
                     console.log("WIN DOWN");
-                    this.props.playerDeath();
+                    this.props.win();
                 } else {
                     for(i = 0; i < blocks.length; i++) {
                         block = blocks[i];

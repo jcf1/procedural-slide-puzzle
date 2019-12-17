@@ -112,6 +112,10 @@ export default class Board extends Component {
     });
   }
 
+  win() {
+    this.playerDeath();
+  }
+
   update() {
 
     let blockWidth = 100.0/this.props.width;
@@ -144,7 +148,7 @@ export default class Board extends Component {
   render() {
     return (
         <div style={this.style()}>
-            < Player size={this.state.blockSize} position={this.state.playerPos} direction={this.state.playerDir} boardSize={this.state.boardSize} blocks={this.state.blocks} goal={this.state.goalPos} playerDeath={this.playerDeath} playerStop={this.playerStop} />
+            < Player size={this.state.blockSize} position={this.state.playerPos} direction={this.state.playerDir} boardSize={this.state.boardSize} blocks={this.state.blocks} goal={this.state.goalPos} win={this.win} playerDeath={this.playerDeath} playerStop={this.playerStop} />
             < Goal size={this.state.blockSize} position={this.state.goalPos} />
             {
               this.state.blocks.map((block,i) => 
