@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Player from './Player';
 import Goal from './Goal';
 import Block from './Block';
+import { UP,LEFT,DOWN,RIGHT,NONE,LOCK,UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY } from '../helpers/constants';
 
 export default class Board extends Component {
 
@@ -19,39 +20,44 @@ export default class Board extends Component {
     super(props);
 
     this.state = {
-      playerPos: {y: 0, x: 0},
-      playerDir: 5,
-      goalPos: {y: 0, x: 0},
-      blocks: []
+      boardSize: {
+        width: 600,
+        height: 600
+      },
+      playerPos: {top: 0, left: 0},
+      playerDir: LOCK,
+      goalPos: {top: 0, left: 0},
+      blocks: [],
+      blockSize: {width: 0, height: 0}
     };
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.playerDeath = this.playerDeath.bind(this);
+    this.playerStop = this.playerStop.bind(this);
   }
 
   handleKeyPress(e) {
-    console.log(e.keyCode);
-    if(this.state.playerDir < 4) {
+    if(this.state.playerDir !== NONE) {
       return;
     }
 
     let direction;
     switch(e.keyCode) {
-        case 37:
+        case LEFT_KEY:
             // LEFT
-            direction = 0;
+            direction = LEFT;
             break;
-        case 38:
+        case UP_KEY:
             // UP
-            direction = 1;
+            direction = UP;
             break;
-        case 39:
+        case RIGHT_KEY:
             // RIGHT
-            direction = 2;
+            direction = RIGHT;
             break;
-        case 40:
+        case DOWN_KEY:
             // DOWN
-            console.log("DOWN");
-            direction = 3;
+            direction = DOWN;
             break;
         default:
             return;
@@ -64,21 +70,21 @@ export default class Board extends Component {
     let dir = this.state.playerDir;
 
     switch(dir) {
-      case 0:
+      case LEFT:
         // LEFT
-        pos = {y: pos.y, x: pos.x - 1};
+        pos = {top: pos.top, left: pos.left - 1};
         break;
-      case 1:
+      case UP:
         // UP
-        pos = {y: pos.y - 1, x: pos.x};
+        pos = {top: pos.top - 1, left: pos.left};
         break;
-      case 2:
+      case RIGHT:
         // RIGHT
-        pos = {y: pos.y, x: pos.x + 1};
+        pos = {top: pos.top, left: pos.left + 1};
         break;
-      case 3:
+      case DOWN:
         // DOWN
-        pos = {y: pos.y + 1, x: pos.x};
+        pos = {top: pos.top + 1, left: pos.left};
         break;
       default:
         return;
@@ -87,18 +93,46 @@ export default class Board extends Component {
     this.setState({playerPos: pos});
   }
 
-  update() {
+  positionCalc = (pos) => {
+    let blockWidth = 100.0/this.props.width;
+    let blockHeight = 100.0/this.props.height;
+    return ({top: blockHeight * pos.y, left: blockWidth * pos.x});
+  };
+
+  playerDeath() {
     this.setState({
-      playerPos: this.props.start,
-      goalPos: this.props.goal,
-      blocks: this.props.blocks
+      playerPos: this.positionCalc(this.props.start),
+      playerDir: NONE
+    });
+  }
+
+  playerStop() {
+    this.setState({
+      playerDir: NONE
+    });
+  }
+
+  update() {
+
+    let blockWidth = 100.0/this.props.width;
+    let blockHeight = 100.0/this.props.height;
+
+    this.setState({
+      playerPos: this.positionCalc(this.props.start),
+      goalPos: this.positionCalc(this.props.goal),
+      blocks:  this.props.blocks.map((block,i) => this.positionCalc(block)),
+      playerDir: NONE,
+      blockSize: {
+        width: blockWidth, 
+        height: blockHeight
+      }
     });
   }
   
   componentDidMount() {
     this.setState({ playerPos: this.props.start });
     window.onkeydown = this.handleKeyPress;
-    this.playerInterval = setInterval(this.updatePlayerPos, 100);
+    this.playerInterval = setInterval(this.updatePlayerPos, 15);
   }
   
   componentDidUpdate(prevProps) {
@@ -107,26 +141,14 @@ export default class Board extends Component {
     }
   }
 
-  //< Player size={{width: blockWidth, height: blockHeight}} position={{top: 0, left: 0}} />
-  //< Goal size={{width: blockWidth, height: blockHeight}} position={{top: 0, left: 10}} />
-  //< Block size={{width: blockWidth, height: blockHeight}} position={{top: 0, left: 20}} />
   render() {
-    let blockSize = {
-      width: 100.0/this.props.width, 
-      height: 100.0/this.props.height
-    };
-
-    let positionCalc = (pos) => {
-      return ({top: blockSize.height * pos.y, left: blockSize.width * pos.x});
-    };
-
     return (
         <div style={this.style()}>
-            < Player size={blockSize} position={positionCalc(this.state.playerPos)} width={this.props.width} height={this.props.height} blocks={this.state.blocks} goal={this.state.goal} />
-            < Goal size={blockSize} position={positionCalc(this.state.goalPos)} />
+            < Player size={this.state.blockSize} position={this.state.playerPos} direction={this.state.playerDir} boardSize={this.state.boardSize} blocks={this.state.blocks} goal={this.state.goalPos} playerDeath={this.playerDeath} playerStop={this.playerStop} />
+            < Goal size={this.state.blockSize} position={this.state.goalPos} />
             {
               this.state.blocks.map((block,i) => 
-              < Block key={i} size={blockSize} position={positionCalc(block)} />)
+              < Block key={i} size={this.state.blockSize} position={block} />)
             }
         </div>
     );
