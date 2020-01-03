@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Board from './Board';
-import PuzzlemMaker from './PuzzleMaker';
+import PuzzleMaker from './PuzzleMaker';
 
 const getRandomSeed = () => {
     return Math.floor(Math.random() * 1000000);
@@ -31,7 +31,8 @@ export default class Game extends Component {
         let width = 20;
         let height = 20;
         //Call Puzzle Generation
-        let puzzle = PuzzlemMaker.makePuzzle(seed, this.state.fake, width, height);
+        let puzzle = PuzzleMaker.makePuzzleNew(seed, this.state.fake, width, height);
+        //let puzzle = PuzzleMaker.makePuzzle(seed, this.state.fake, width, height);
 
         this.setState({start: puzzle.start, goal: puzzle.goal, blocks: puzzle.blocks});
     }
