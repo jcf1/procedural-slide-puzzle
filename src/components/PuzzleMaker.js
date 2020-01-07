@@ -3,11 +3,15 @@
 function Position(y, x) {
     this.y = y;
     this.x = x;
+    this.hash = function() {
+        return y+","+x;
+    }
 }
-
+/*
 Position.prototype.hash = function() {
     return this.y+","+this.x;
 }
+*/
 //===================================================
 
 //===================================================
@@ -109,7 +113,6 @@ function computePossibleNextPositions(puzzle, height, width, index, pos, vertOrH
     var leftup = [];
     var rightdown = [];
 
-    //console.log(pos);
     let y = pos.y;
     let x = pos.x;
 
@@ -230,7 +233,6 @@ function computePossibleEndPositions(puzzle, height, width, length, index, pos, 
     var leftup = [];
     var rightdown = [];
 
-    //console.log(pos);
     let y = pos.y;
     let x = pos.x;
 
@@ -348,7 +350,6 @@ function computeReachability(puzzle, height, width, prev_reachSet, prev_incoming
     }
 
     while(posQueue.length > 0 && dirQueue.length > 0) {
-        //console.log("Before Shift: "+posQueue.length);
 
         let pos = posQueue.shift();
         let action = dirQueue.shift();
@@ -357,16 +358,12 @@ function computeReachability(puzzle, height, width, prev_reachSet, prev_incoming
         let y = pos.y;
         let x = pos.x;
 
-        //console.log(pos);
-        //console.log("After Shift: "+posQueue.length);
-
         var i;
         var next;
         switch(action) {
             case LEFT:
                 for(i = x-1; i >= 0; i--) {
                     next = new Position(y, i+1);
-                    //console.log(next);
                     if(!reachSet.has(next.hash())) {
                         reachSet.set(next.hash(),length);
                         incomingSet.set(next.hash(),pos.hash());
@@ -579,6 +576,7 @@ function generatePath(puzzle, height, width, length) {
 
 function tryStart(puzzle, height, width, length, vertOrHori) {
     let count = 0;
+    let max = 0;
 
     var success = generateStartMove(puzzle, height, width, count, vertOrHori);
     if(!success) {
@@ -586,33 +584,31 @@ function tryStart(puzzle, height, width, length, vertOrHori) {
     }
 
     while(count < (length-1)) {
-        console.log("Progress: "+count+" of "+length);
-        console.log(playerPositions);
-        printSolution();
+        //console.log("Progress: "+count+" of "+length);
+        //printSolution();
         if(count === (length-2)) {
             success = generateEndMove(puzzle, height, width, count, length, vertOrHori);
             if(success) {
-                console.log("Final:");
-                console.log(playerPositions[length-1]);
-                printSolution();
+                //printSolution();
                 return true;
             }
         } else {
-            console.log("Single");
             success = generateSingleMove(puzzle, height, width, count, vertOrHori);
         }
         vertOrHori = vertOrHori === UPDOWN ? LEFTRIGHT : UPDOWN;
-        console.log(success);
         if(success) {
-            console.log("Success "+count);
+            //console.log("Success "+count);
             count += 1;
         } else {
-            removePosition(puzzle, count);
-            console.log("Failed "+count);
+            //console.log("Failed "+count);
             count -= 1;
         }
 
-        if(count === -1) {
+        if(count > max) {
+            max = count;
+        }
+
+        if(count === -1 || count <= (max - 2)) {
             return false;
         }
     }
@@ -669,9 +665,6 @@ function generateSingleMove(puzzle, height, width, index, vertOrHori) {
 
     solution.splice(index,1,direction);
 
-    console.log("current: "+current);
-    console.log("nextPos: "+nextPos);
-
     addPosition(index+1, current, nextPos, direction);
     let isReach = addBlock(puzzle, index+1, nextPos, direction);
 
@@ -704,15 +697,12 @@ function generateEndMove(puzzle, height, width, index, length, vertOrHori) {
     } else if(options[1].length > 0) {
         direction = vertOrHori === UPDOWN ? DOWN : RIGHT;
     } else {
-        console.log("HERE1");
         return false;
     }
 
     vertOrHori = vertOrHori === UPDOWN ? LEFTRIGHT : UPDOWN;
 	var directionIdx = ((direction === LEFT) || (direction === UP)) ? LEFTUP : RIGHTDOWN;
     var possibleNext = options[directionIdx];
-    
-    console.log("possibleNext: "+possibleNext.length);
 
     const start = playerPositions[0];
     var nextPos;
@@ -722,14 +712,11 @@ function generateEndMove(puzzle, height, width, index, length, vertOrHori) {
             direction = oppositeDirection(direction);
             directionIdx = directionIdx === RIGHTDOWN ? LEFTUP : RIGHTDOWN;
             possibleNext = unusedNextPositions[index][directionIdx];
-            console.log("possibleNext: "+possibleNext.length);
             if(possibleNext.length === 0) {
-                console.log("HERE2");
                 return false;
             }
         }
         nextPos = possibleNext.shift();
-        console.log(nextPos);
         switch(direction) {
             case LEFT:
                 testPos = new Position(nextPos.y, nextPos.x - 1);
@@ -779,7 +766,6 @@ function generateEndMove(puzzle, height, width, index, length, vertOrHori) {
         direction = vertOrHori === UPDOWN ? DOWN : RIGHT;
         possibleNext = options[1];
     } else {
-        console.log("HERE3");
         return false;
     }
     
@@ -794,11 +780,9 @@ function generateEndMove(puzzle, height, width, index, length, vertOrHori) {
 }
 //===================================================
 
-function makePuzzleNew(seed, fake, width, height) {
+function makePuzzle(seed, fake, width, height) {
     // Seed Random Generator
     Math.seed = seed;
-
-    //Math.seed = 1;
 
     // Set Length of Solution
     let length;
@@ -808,8 +792,8 @@ function makePuzzleNew(seed, fake, width, height) {
     } else {
         length = ((width * 3) / 4) + Math.seededRandom(width / 2);
     }
-    
-   length = 17;
+
+    length = 25
 
     console.log("Make Puzzle");
     console.log("SEED: "+seed);
@@ -817,15 +801,6 @@ function makePuzzleNew(seed, fake, width, height) {
     console.log("WIDTH: "+width);
     console.log("HEIGHT: "+height);
     console.log("LENGTH: "+length);
-
-    // Initialize Puzzle Array
-    var puzzle = [];
-    for(var i = 0; i < height; i++) {
-        puzzle[i] = [];
-        for(var j = 0; j < width; j++) {
-            puzzle[i].push(0);
-        }
-    }
 
     var remainingStarts = [];
     for(var y = 0; y < height; y++) {
@@ -837,6 +812,16 @@ function makePuzzleNew(seed, fake, width, height) {
     var start = new Position(0,0);
     var goal;
     do {
+
+        // Initialize Puzzle Array
+        var puzzle = [];
+        for(var i = 0; i < height; i++) {
+            puzzle[i] = [];
+            for(var j = 0; j < width; j++) {
+                puzzle[i].push(0);
+            }
+        }
+
         // Initialize global Structures
         solution = [];
         solutionPositions = [];
@@ -858,7 +843,6 @@ function makePuzzleNew(seed, fake, width, height) {
             unusedNextPositions.push([]);
         }
 
-        puzzle[start.y][start.x] = EMPTY;
         start = remainingStarts.splice(Math.seededRandom(remainingStarts.length - 1), 1)[0];
         puzzle[start.y][start.x] = START;
 
@@ -886,6 +870,7 @@ function makePuzzleNew(seed, fake, width, height) {
     }
 }
 
+/*
 function makePuzzle(seed, fake, width, height) {
     // Seed Random Generator
     Math.seed = seed;
@@ -920,10 +905,9 @@ function makePuzzle(seed, fake, width, height) {
         blocks: blocks
     }
 }
-
+*/
 var PuzzleMaker = {
-    makePuzzle,
-    makePuzzleNew
+    makePuzzle
 }
 
 module.exports = PuzzleMaker;

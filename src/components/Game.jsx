@@ -31,8 +31,7 @@ export default class Game extends Component {
         let width = 20;
         let height = 20;
         //Call Puzzle Generation
-        let puzzle = PuzzleMaker.makePuzzleNew(seed, this.state.fake, width, height);
-        //let puzzle = PuzzleMaker.makePuzzle(seed, this.state.fake, width, height);
+        let puzzle = PuzzleMaker.makePuzzle(seed, this.state.fake, width, height);
 
         this.setState({start: puzzle.start, goal: puzzle.goal, blocks: puzzle.blocks});
     }
