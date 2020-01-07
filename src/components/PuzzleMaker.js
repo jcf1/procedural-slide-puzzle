@@ -780,9 +780,176 @@ function generateEndMove(puzzle, height, width, index, length, vertOrHori) {
 }
 //===================================================
 
+
+//===================================================
+// Fake Block Codes
+function addFakePosition(puzzle, combined_allPositions, pos1, pos2, action) {
+    const y = pos2.y;
+    const x = pos2.x;
+
+    let i;
+    let new_pos;
+    switch(action) {
+        case LEFT:
+            for(i = pos1.x; i >= x; i--) {
+                if(puzzle[y][i] === EMPTY) {
+                    new_pos = new Position(y, i);    
+                    combined_allPositions.set(new_pos.hash(), new_pos);
+                }
+            }
+            break;
+        case RIGHT:
+            for(i = pos1.x; i <= x; i++) {
+                if(puzzle[y][i] === EMPTY) {
+                    new_pos = new Position(y, i);    
+                    combined_allPositions.set(new_pos.hash(), new_pos);
+                }
+            }
+            break;
+        case UP:
+            for(i = pos1.y; i >= y; i--) {
+                if(puzzle[i][x] === EMPTY) {
+                    new_pos = new Position(i, x);    
+                    combined_allPositions.set(new_pos.hash(), new_pos);
+                }
+            }
+            break;
+        case DOWN:
+            for(i = pos1.y; i <= y; i++) {
+                if(puzzle[i][x] === EMPTY) {
+                    new_pos = new Position(i, x);    
+                    combined_allPositions.set(new_pos.hash(), new_pos);
+                }
+            }
+            break;
+        default:
+            break;
+    }
+
+    return combined_allPositions;
+}
+
+function pathDirection(pos1, pos2) {
+    if(pos1.x === pos2.x) {
+        if(pos1.y < pos2.y) {
+            return DOWN;
+        } else if(pos1.y > pos2.y) {
+            return UP;
+        }
+    } else if(pos1.y === pos2.y) {
+        if(pos1.x < pos2.x) {
+            return RIGHT;
+        } else if(pos1.x > pos2.x) {
+            return LEFT;
+        }
+    }
+    return -1;
+}
+
+function addFakeBlocks(puzzle, height, width, start, end, length, numBlocks) {
+    let fake_blocks = [];
+
+    computeReachability(puzzle, height, width, new Map(), new Map(), 0, start, -1);
+    let old_reachSet = reachPositions[0];
+    let old_incomingSet = incomingDirections[0];
+
+    for(let i = 0; i < numBlocks; i++) {
+        let reachSet = old_reachSet;
+        let incomingSet = old_incomingSet;
+        
+        let combined_allPositions = new Map();               
+        for(let j = 0; j < solutionPositions.length; j++) {
+            let map = solutionPositions[j];
+            for(const pos_hash of map.keys()) {
+                combined_allPositions.set(pos_hash,map[pos_hash]);
+            }
+        }
+        
+        let reachNotAll = new Map();
+        let possible = [];
+        for(const pos_hash of incomingSet.keys()) {
+            if(!combined_allPositions.has(pos_hash)) {
+                let arr = pos_hash.split(",");
+                let pos = new Position(Number(arr[0]),Number(arr[1]));
+                reachNotAll.set(pos_hash,pos);
+                possible.push(pos);
+            }
+        }
+        
+        let update = false;
+        while(possible.length !== 0 && !update) {
+            let pos = possible.splice(Math.seededRandom(possible.length - 1),1)[0];
+            let arr = incomingSet.get(pos.hash()).split(",");
+            let pos2 = new Position(Number(arr[0]),Number(arr[1]));
+            let action = pathDirection(pos2,pos);
+
+            let block;
+
+            const y = pos.y;
+            const x = pos.x;
+            switch(action) {
+                case LEFT:
+                    if((x - 1) < 0) {
+                        continue;
+                    }
+                    block = new Position(y, x-1);
+                    break;
+                case RIGHT:
+                    if((x + 1) >= width) {
+                        continue;
+                    }
+                    block = new Position(y, x+1);
+                    break;
+                case UP:
+                    if((y - 1) < 0) {
+                        continue;
+                    }
+                    block = new Position(y-1, x);
+                    break;
+                case DOWN:
+                    if((x + 1) < height) {
+                        continue;
+                    }
+                    block = new Position(y+1, x);
+                    break;
+                default:
+                    break;
+            }
+
+            if(combined_allPositions.has(block) || puzzle[block.y][block.x] !== EMPTY || puzzle[pos.y][pos.x] !== EMPTY) {
+                continue;
+            }
+
+            puzzle[block.y][block.x] = BLOCK;
+            computeReachability(puzzle, height, width, new Map(), new Map(), 0, start, -1);
+            reachSet = reachPositions[0];
+            incomingSet = incomingDirections[0];
+
+            if(reachSet.get(end.hash()) === length) {
+                update = true;
+                fake_blocks.push(block);
+                combined_allPositions = addFakePosition(puzzle, combined_allPositions,  pos, old_incomingSet.get(pos.hash()), action);
+                old_reachSet = reachSet;
+                old_incomingSet = incomingSet;
+            } else {
+                puzzle[block.y][block.x] = EMPTY;
+                reachSet = old_reachSet;
+                incomingSet = old_incomingSet;
+            }
+        }
+        if(possible.length === 0) {
+            return fake_blocks;
+        }
+    }
+    return fake_blocks;
+}
+//===================================================
+
 function makePuzzle(seed, fake, width, height) {
     // Seed Random Generator
     Math.seed = seed;
+
+    //Math.seed = 728802;
 
     // Set Length of Solution
     let length;
@@ -793,7 +960,7 @@ function makePuzzle(seed, fake, width, height) {
         length = ((width * 3) / 4) + Math.seededRandom(width / 2);
     }
 
-    length = 25
+    //length = 25;
 
     console.log("Make Puzzle");
     console.log("SEED: "+seed);
@@ -860,8 +1027,18 @@ function makePuzzle(seed, fake, width, height) {
 
     //Remove Start Position from Block Positions
     blockPositions.splice(0,1);
-
+    printSolution();
+    
     // Add Fake Blocks Here if "fake" is true
+    if(fake) {
+        let numBlocks = Math.floor(length / 2) + Math.seededRandom(Math.floor(length / 4));
+        let fake_blocks = addFakeBlocks(puzzle, height, width, start, goal, length, numBlocks)
+        //console.log(blockPositions);
+        //console.log(fake_blocks);
+        blockPositions = blockPositions.concat(fake_blocks);
+        //console.log(blockPositions);
+    }
+    
 
     return {
         start: start,
