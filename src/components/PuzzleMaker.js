@@ -949,8 +949,6 @@ function makePuzzle(seed, fake, width, height) {
     // Seed Random Generator
     Math.seed = seed;
 
-    //Math.seed = 728802;
-
     // Set Length of Solution
     let length;
     
@@ -959,15 +957,6 @@ function makePuzzle(seed, fake, width, height) {
     } else {
         length = ((width * 3) / 4) + Math.seededRandom(width / 2);
     }
-
-    //length = 25;
-
-    console.log("Make Puzzle");
-    console.log("SEED: "+seed);
-    console.log("FAKE: "+fake);
-    console.log("WIDTH: "+width);
-    console.log("HEIGHT: "+height);
-    console.log("LENGTH: "+length);
 
     var remainingStarts = [];
     for(var y = 0; y < height; y++) {
@@ -1027,16 +1016,12 @@ function makePuzzle(seed, fake, width, height) {
 
     //Remove Start Position from Block Positions
     blockPositions.splice(0,1);
-    printSolution();
     
     // Add Fake Blocks Here if "fake" is true
     if(fake) {
         let numBlocks = Math.floor(length / 2) + Math.seededRandom(Math.floor(length / 4));
         let fake_blocks = addFakeBlocks(puzzle, height, width, start, goal, length, numBlocks)
-        //console.log(blockPositions);
-        //console.log(fake_blocks);
         blockPositions = blockPositions.concat(fake_blocks);
-        //console.log(blockPositions);
     }
     
 
@@ -1047,42 +1032,6 @@ function makePuzzle(seed, fake, width, height) {
     }
 }
 
-/*
-function makePuzzle(seed, fake, width, height) {
-    // Seed Random Generator
-    Math.seed = seed;
-    
-    console.log("Make Puzzle");
-    console.log(seed);
-    console.log(fake);
-    console.log(width);
-    console.log(height);
-
-    var leftup = [0,1,2,3,4,5,6,7,8,9];
-    console.log(leftup);
-    var change;
-    var temp;
-    for(let i = 0; i < leftup.length; i++) {
-        change = i + Math.seededRandom(leftup.length - i - 1);
-        temp = leftup[change];
-        leftup.splice(change, 1, leftup[i]);
-        leftup.splice(i, 1, temp);
-    }
-    console.log(leftup);
-
-    let start = {y: 5, x: 5};
-    let goal = {y: 1, x: 14};
-    let block1 = {y: 15, x: 5};
-    let block2 = {y: 14, x: 15};
-    let blocks = [block1,block2];
-
-    return {
-        start: start,
-        goal: goal,
-        blocks: blocks
-    }
-}
-*/
 var PuzzleMaker = {
     makePuzzle
 }
