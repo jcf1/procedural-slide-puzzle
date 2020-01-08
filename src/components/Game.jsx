@@ -16,6 +16,7 @@ export default class Game extends Component {
             goal: {y: 0, x: 0},
             blocks: [],
             seed: -1,
+            current: -1,
             width: 0,
             height: 0,
             fake: false
@@ -26,7 +27,7 @@ export default class Game extends Component {
 
     makeNewPuzzle = (seed) => {
         //User input
-        this.setState({width: 20, height:20});
+        this.setState({current:seed, width: 20, height:20});
 
         let width = 20;
         let height = 20;
@@ -40,6 +41,12 @@ export default class Game extends Component {
         let seed = document.getElementById("seed-box").value;
         this.setState({seed: seed});
         this.makeNewPuzzle(seed);
+    }
+
+    newSeed = () => {
+        let seed = getRandomSeed();
+        this.setState({seed: seed});
+        document.getElementById("seed-box").value = seed;
     }
 
     reset = () => {
@@ -67,7 +74,10 @@ export default class Game extends Component {
                 <div>
                     <button onClick={this.buttonClicked.bind(this)}>Make Puzzle</button>
                 </div>
-                < Board seed={this.state.seed} width={this.state.width} height={this.state.height} start={this.state.start} goal={this.state.goal} blocks={this.state.blocks} reset={this.reset.bind(this)} />
+                <div>
+                    <button onClick={this.newSeed.bind(this)}>Random Seed</button>
+                </div>
+                < Board seed={this.state.seed} current={this.state.current} width={this.state.width} height={this.state.height} start={this.state.start} goal={this.state.goal} blocks={this.state.blocks} reset={this.reset.bind(this)} />
             </div>
         );
     }

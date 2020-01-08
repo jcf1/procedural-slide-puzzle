@@ -140,20 +140,25 @@ export default class Board extends Component {
   }
   
   componentDidUpdate(prevProps) {
-    if(this.props.seed !== prevProps.seed) {
+    if(this.props.seed !== prevProps.seed || (this.props.blocks.length !== prevProps.blocks.length)) {
       this.update();
     }
   }
 
   render() {
-    return (
-        <div style={this.style()}>
+    return (      
+        <div>
+          <div>
+            <center><h2>Current Seed: {this.props.current}</h2></center>  
+          </div>
+          <div style={this.style()}>
             < Player size={this.state.blockSize} position={this.state.playerPos} direction={this.state.playerDir} boardSize={this.state.boardSize} blocks={this.state.blocks} goal={this.state.goalPos} win={this.win} playerDeath={this.playerDeath} playerStop={this.playerStop} />
             < Goal size={this.state.blockSize} position={this.state.goalPos} />
             {
               this.state.blocks.map((block,i) => 
               < Block key={i} size={this.state.blockSize} position={block} />)
             }
+          </div>
         </div>
     );
   }
