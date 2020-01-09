@@ -117,7 +117,6 @@ export default class Board extends Component {
   }
 
   update() {
-
     let blockWidth = 100.0/this.props.width;
     let blockHeight = 100.0/this.props.height;
 

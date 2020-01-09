@@ -17,8 +17,8 @@ export default class Game extends Component {
             blocks: [],
             seed: -1,
             current: -1,
-            width: 0,
-            height: 0,
+            width: 20,
+            height: 20,
             fake: false
         }
 
@@ -26,14 +26,9 @@ export default class Game extends Component {
     }
 
     makeNewPuzzle = (seed) => {
-        //User input
-        this.setState({current:seed, width: 20, height:20});
-
-        let width = 20;
-        let height = 20;
+        this.setState({current:seed});
         //Call Puzzle Generation
-        let puzzle = PuzzleMaker.makePuzzle(seed, this.state.fake, width, height);
-
+        let puzzle = PuzzleMaker.makePuzzle(seed, this.state.fake, this.state.width, this.state.height);
         this.setState({start: puzzle.start, goal: puzzle.goal, blocks: puzzle.blocks});
     }
 

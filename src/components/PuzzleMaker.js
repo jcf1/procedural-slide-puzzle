@@ -3,9 +3,7 @@
 function Position(y, x) {
     this.y = y;
     this.x = x;
-    this.hash = function() {
-        return y+","+x;
-    }
+    this.hash = y+","+x;
 }
 /*
 Position.prototype.hash = function() {
@@ -31,8 +29,6 @@ const DOWN  = 0;
 const UP    = 1;
 const LEFT  = 2;
 const RIGHT = 3;
-
-const DIRECTIONS = 4;
 
 // Puzzle Cells
 const EMPTY = 0;
@@ -143,7 +139,7 @@ function computePossibleNextPositions(puzzle, height, width, index, pos, vertOrH
                 for(j = 0; j < leftup.length; j++) {
                     next = leftup[j];
                     block = new Position(next.y - 1, next.x);
-                    if(playerPositions_hash.includes(next.hash()) || currSolPositions.has(block.hash()) || reachPositions[index-1].has(next.hash())) {
+                    if(playerPositions_hash.includes(next.hash) || currSolPositions.has(block.hash) || reachPositions[index-1].has(next.hash)) {
                         leftRemove.push(j);
                     }
                 }
@@ -151,7 +147,7 @@ function computePossibleNextPositions(puzzle, height, width, index, pos, vertOrH
                 for(j = 0; j < rightdown.length; j++) {
                     next = rightdown[j];
                     block = new Position(next.y - 1, next.x);
-                    if(playerPositions_hash.includes(next.hash()) || currSolPositions.has(block.hash()) || reachPositions[index-1].has(next.hash())) {
+                    if(playerPositions_hash.includes(next.hash) || currSolPositions.has(block.hash) || reachPositions[index-1].has(next.hash)) {
                         rightRemove.push(j);
                     }
                 }
@@ -184,7 +180,7 @@ function computePossibleNextPositions(puzzle, height, width, index, pos, vertOrH
                 for(j = 0; j < leftup.length; j++) {
                     next = leftup[j];
                     block = new Position(next.y, next.x - 1);
-                    if(playerPositions_hash.includes(next.hash()) || currSolPositions.has(block.hash()) || reachPositions[index-1].has(next.hash())) {
+                    if(playerPositions_hash.includes(next.hash) || currSolPositions.has(block.hash) || reachPositions[index-1].has(next.hash)) {
                         upRemove.push(j);
                     }
                 }
@@ -192,7 +188,7 @@ function computePossibleNextPositions(puzzle, height, width, index, pos, vertOrH
                 for(j = 0; j < rightdown.length; j++) {
                     next = rightdown[j];
                     block = new Position(next.y, next.x + 1);
-                    if(playerPositions_hash.includes(next.hash()) || currSolPositions.has(block.hash()) || reachPositions[index-1].has(next.hash())) {
+                    if(playerPositions_hash.includes(next.hash) || currSolPositions.has(block.hash) || reachPositions[index-1].has(next.hash)) {
                         downRemove.push(j);
                     }
                 }
@@ -245,7 +241,7 @@ function computePossibleEndPositions(puzzle, height, width, length, index, pos, 
                     break;
                 }
                 next = new Position(i,x);
-                if(reachPositions[index].get(next.hash()) === length) {
+                if(reachPositions[index].get(next.hash) === length) {
                     leftup.push(next);
                 }
             }
@@ -255,7 +251,7 @@ function computePossibleEndPositions(puzzle, height, width, length, index, pos, 
                     break;
                 }
                 next = new Position(i,x);
-                if(reachPositions[index].get(next.hash()) === length) {
+                if(reachPositions[index].get(next.hash) === length) {
                     rightdown.push(next);
                 }
             }
@@ -266,7 +262,7 @@ function computePossibleEndPositions(puzzle, height, width, length, index, pos, 
                     break;
                 }
                 next = new Position(y,i);
-                if(reachPositions[index].get(next.hash()) === length) {
+                if(reachPositions[index].get(next.hash) === length) {
                     leftup.push(next);
                 }
             }
@@ -276,7 +272,7 @@ function computePossibleEndPositions(puzzle, height, width, length, index, pos, 
                     break;
                 }
                 next = new Position(y,i);
-                if(reachPositions[index].get(next.hash()) === length) {
+                if(reachPositions[index].get(next.hash) === length) {
                     rightdown.push(next);
                 }
             }
@@ -310,8 +306,8 @@ function computeReachability(puzzle, height, width, prev_reachSet, prev_incoming
     var incomingSet = prev_incomingSet;
 
     if(direction === -1) {
-        reachSet.set(start.hash(), 0);
-        incomingSet.set(start.hash(), start.hash());
+        reachSet.set(start.hash, 0);
+        incomingSet.set(start.hash, start.hash);
     }
 
     var posQueue = [];
@@ -353,7 +349,7 @@ function computeReachability(puzzle, height, width, prev_reachSet, prev_incoming
 
         let pos = posQueue.shift();
         let action = dirQueue.shift();
-        let length = reachSet.get(pos.hash()) + 1;
+        let length = reachSet.get(pos.hash) + 1;
         var repeat = true;
         let y = pos.y;
         let x = pos.x;
@@ -364,17 +360,17 @@ function computeReachability(puzzle, height, width, prev_reachSet, prev_incoming
             case LEFT:
                 for(i = x-1; i >= 0; i--) {
                     next = new Position(y, i+1);
-                    if(!reachSet.has(next.hash())) {
-                        reachSet.set(next.hash(),length);
-                        incomingSet.set(next.hash(),pos.hash());
+                    if(!reachSet.has(next.hash)) {
+                        reachSet.set(next.hash,length);
+                        incomingSet.set(next.hash,pos.hash);
                         repeat = false;
                     }
 
                     if((i === 0 && puzzle[y][i] === EMPTY) || (puzzle[y][i] === END)) {
                         next = new Position(y, i);
-                        if(!reachSet.has(next.hash())) {
-                            reachSet.set(next.hash(),length);
-                            incomingSet.set(next.hash(),pos.hash());
+                        if(!reachSet.has(next.hash)) {
+                            reachSet.set(next.hash,length);
+                            incomingSet.set(next.hash,pos.hash);
                         }
                         break;
                     } else if(puzzle[y][i] === BLOCK) {
@@ -392,17 +388,17 @@ function computeReachability(puzzle, height, width, prev_reachSet, prev_incoming
                 for(i = x+1; i < width; i++) {
                     next = new Position(y, i-1);
 
-                    if(!reachSet.has(next.hash())) {
-                        reachSet.set(next.hash(),length);
-                        incomingSet.set(next.hash(),pos.hash());
+                    if(!reachSet.has(next.hash)) {
+                        reachSet.set(next.hash,length);
+                        incomingSet.set(next.hash,pos.hash);
                         repeat = false;
                     }
 
                     if((i === width - 1 && puzzle[y][i] === EMPTY) || (puzzle[y][i] === END)) {
                         next = new Position(y, i);
-                        if(!reachSet.has(next.hash())) {
-                            reachSet.set(next.hash(),length);
-                            incomingSet.set(next.hash(),pos.hash());
+                        if(!reachSet.has(next.hash)) {
+                            reachSet.set(next.hash,length);
+                            incomingSet.set(next.hash,pos.hash);
                         }
                         break;
                     } else if(puzzle[y][i] === BLOCK) {
@@ -420,17 +416,17 @@ function computeReachability(puzzle, height, width, prev_reachSet, prev_incoming
                 for(i = y-1; i >= 0; i--) {
                     next = new Position(i+1, x);
 
-                    if(!reachSet.has(next.hash())) {
-                        reachSet.set(next.hash(),length);
-                        incomingSet.set(next.hash(),pos.hash());
+                    if(!reachSet.has(next.hash)) {
+                        reachSet.set(next.hash,length);
+                        incomingSet.set(next.hash,pos.hash);
                         repeat = false;
                     }
 
                     if((i === 0 && puzzle[i][x] === EMPTY) || (puzzle[i][x] === END)) {
                         next = new Position(i, x);
-                        if(!reachSet.has(next.hash())) {
-                            reachSet.set(next.hash(),length);
-                            incomingSet.set(next.hash(),pos.hash());
+                        if(!reachSet.has(next.hash)) {
+                            reachSet.set(next.hash,length);
+                            incomingSet.set(next.hash,pos.hash);
                         }
                         break;
                     } else if(puzzle[i][x] === BLOCK) {
@@ -448,17 +444,17 @@ function computeReachability(puzzle, height, width, prev_reachSet, prev_incoming
                 for(i = y+1; i < height; i++) {
                     next = new Position(i-1, x);
 
-                    if(!reachSet.has(next.hash())) {
-                        reachSet.set(next.hash(),length);
-                        incomingSet.set(next.hash(),pos.hash());
+                    if(!reachSet.has(next.hash)) {
+                        reachSet.set(next.hash,length);
+                        incomingSet.set(next.hash,pos.hash);
                         repeat = false;
                     }
 
                     if((i === height - 1 && puzzle[i][x] === EMPTY) || (puzzle[i][x] === END)) {
                         next = new Position(i, x);
-                        if(!reachSet.has(next.hash())) {
-                            reachSet.set(next.hash(),length);
-                            incomingSet.set(next.hash(),pos.hash());
+                        if(!reachSet.has(next.hash)) {
+                            reachSet.set(next.hash,length);
+                            incomingSet.set(next.hash,pos.hash);
                         }
                         break;
                     } else if(puzzle[i][x] === BLOCK) {
@@ -491,25 +487,25 @@ function addPosition(index, pos1, pos2, direction) {
         case LEFT:
             for(i = pos1.x; i >= x; i--) {
                 pos = new Position(y, i);
-                addPositions.set(pos.hash(), pos);
+                addPositions.set(pos.hash, pos);
             }
             break;
         case RIGHT:
             for(i = pos1.x; i <= x; i++) {
                 pos = new Position(y, i);
-                addPositions.set(pos.hash(), pos);
+                addPositions.set(pos.hash, pos);
             }
             break;
         case UP:
             for(i = pos1.y; i >= y; i--) {
                 pos = new Position(i, x);
-                addPositions.set(pos.hash(), pos);
+                addPositions.set(pos.hash, pos);
             }
             break;
         case DOWN:
             for(i = pos1.y; i <= y; i++) {
                 pos = new Position(i, x);
-                addPositions.set(pos.hash(), pos);
+                addPositions.set(pos.hash, pos);
             }
             break;
         default:
@@ -546,11 +542,12 @@ function addBlock(puzzle, index, pos, direction) {
             break;
     }
 
-    solutionPositions[index].set(block.hash(),block);
-	blockPositions.splice(index, 1, block);
-	let isReach = reachPositions[index-1].has(block.hash());
+    solutionPositions[index].set(block.hash,block);
+    blockPositions.splice(index, 1, block);
+    
+	let isReach = reachPositions[index-1].has(block.hash);
 
-	return isReach;
+    return isReach;
 }
 
 function removePosition(puzzle, index) {
@@ -584,12 +581,9 @@ function tryStart(puzzle, height, width, length, vertOrHori) {
     }
 
     while(count < (length-1)) {
-        //console.log("Progress: "+count+" of "+length);
-        //printSolution();
         if(count === (length-2)) {
             success = generateEndMove(puzzle, height, width, count, length, vertOrHori);
             if(success) {
-                //printSolution();
                 return true;
             }
         } else {
@@ -597,10 +591,9 @@ function tryStart(puzzle, height, width, length, vertOrHori) {
         }
         vertOrHori = vertOrHori === UPDOWN ? LEFTRIGHT : UPDOWN;
         if(success) {
-            //console.log("Success "+count);
             count += 1;
         } else {
-            //console.log("Failed "+count);
+            removePosition(puzzle,count);
             count -= 1;
         }
 
@@ -609,6 +602,10 @@ function tryStart(puzzle, height, width, length, vertOrHori) {
         }
 
         if(count === -1 || count <= (max - 2)) {
+            while(count > -1) {
+                removePosition(puzzle,count);
+                count--;
+            }
             return false;
         }
     }
@@ -670,14 +667,13 @@ function generateSingleMove(puzzle, height, width, index, vertOrHori) {
 
     unusedNextPositions.splice(index+1,1,options);
     playerPositions.splice(index+1,1,nextPos);
-    playerPositions_hash.splice(index+1,1,nextPos.hash());
-    
+    playerPositions_hash.splice(index+1,1,nextPos.hash);
 	if(!isReach) {
         computeReachability(puzzle, height, width, reachPositions[index], incomingDirections[index],  index+1, nextPos, direction);
 	} else {
 		let start = playerPositions[0];
 		computeReachability(puzzle, height, width, new Map(), new Map(), index+1, start, -1);
-	}
+    }
 	return true;
 }
 
@@ -734,7 +730,7 @@ function generateEndMove(puzzle, height, width, index, length, vertOrHori) {
                 testPos = new Position(nextPos.y, nextPos.x);
                 break;
         }
-        if(!solutionPositions[index].has(testPos.hash())) {
+        if(!solutionPositions[index].has(testPos.hash)) {
             puzzle[testPos.y][testPos.x] = BLOCK;
             computeReachability(puzzle, height, width, new Map(), new Map(), index+1, start, -1);
             options = computePossibleEndPositions(puzzle, height, width, length, index+1, nextPos, vertOrHori);
@@ -748,7 +744,7 @@ function generateEndMove(puzzle, height, width, index, length, vertOrHori) {
     addPosition(index+1, current, nextPos, direction);
     addBlock(puzzle, index+1, nextPos, direction);
     playerPositions.splice(index+1,1,nextPos);
-    playerPositions_hash.splice(index+1,1,nextPos.hash());
+    playerPositions_hash.splice(index+1,1,nextPos.hash);
 
     current = nextPos;
     if(options[0].length > 0 && options[1].length > 0) {
@@ -772,7 +768,7 @@ function generateEndMove(puzzle, height, width, index, length, vertOrHori) {
 	nextPos = possibleNext.shift();
 	addPosition(index+2, current, nextPos, direction);
     playerPositions.splice(index+2,1,nextPos);
-    playerPositions_hash.splice(index+2,1,nextPos.hash());
+    playerPositions_hash.splice(index+2,1,nextPos.hash);
 	solution.splice(index+1,1,direction);
 	puzzle[nextPos.y][nextPos.x] = END;
 
@@ -794,7 +790,7 @@ function addFakePosition(puzzle, combined_allPositions, pos1, pos2, action) {
             for(i = pos1.x; i >= x; i--) {
                 if(puzzle[y][i] === EMPTY) {
                     new_pos = new Position(y, i);    
-                    combined_allPositions.set(new_pos.hash(), new_pos);
+                    combined_allPositions.set(new_pos.hash, new_pos);
                 }
             }
             break;
@@ -802,7 +798,7 @@ function addFakePosition(puzzle, combined_allPositions, pos1, pos2, action) {
             for(i = pos1.x; i <= x; i++) {
                 if(puzzle[y][i] === EMPTY) {
                     new_pos = new Position(y, i);    
-                    combined_allPositions.set(new_pos.hash(), new_pos);
+                    combined_allPositions.set(new_pos.hash, new_pos);
                 }
             }
             break;
@@ -810,7 +806,7 @@ function addFakePosition(puzzle, combined_allPositions, pos1, pos2, action) {
             for(i = pos1.y; i >= y; i--) {
                 if(puzzle[i][x] === EMPTY) {
                     new_pos = new Position(i, x);    
-                    combined_allPositions.set(new_pos.hash(), new_pos);
+                    combined_allPositions.set(new_pos.hash, new_pos);
                 }
             }
             break;
@@ -818,7 +814,7 @@ function addFakePosition(puzzle, combined_allPositions, pos1, pos2, action) {
             for(i = pos1.y; i <= y; i++) {
                 if(puzzle[i][x] === EMPTY) {
                     new_pos = new Position(i, x);    
-                    combined_allPositions.set(new_pos.hash(), new_pos);
+                    combined_allPositions.set(new_pos.hash, new_pos);
                 }
             }
             break;
@@ -879,7 +875,7 @@ function addFakeBlocks(puzzle, height, width, start, end, length, numBlocks) {
         let update = false;
         while(possible.length !== 0 && !update) {
             let pos = possible.splice(Math.seededRandom(possible.length - 1),1)[0];
-            let arr = incomingSet.get(pos.hash()).split(",");
+            let arr = incomingSet.get(pos.hash).split(",");
             let pos2 = new Position(Number(arr[0]),Number(arr[1]));
             let action = pathDirection(pos2,pos);
 
@@ -925,10 +921,10 @@ function addFakeBlocks(puzzle, height, width, start, end, length, numBlocks) {
             reachSet = reachPositions[0];
             incomingSet = incomingDirections[0];
 
-            if(reachSet.get(end.hash()) === length) {
+            if(reachSet.get(end.hash) === length) {
                 update = true;
                 fake_blocks.push(block);
-                combined_allPositions = addFakePosition(puzzle, combined_allPositions,  pos, old_incomingSet.get(pos.hash()), action);
+                combined_allPositions = addFakePosition(puzzle, combined_allPositions,  pos, old_incomingSet.get(pos.hash), action);
                 old_reachSet = reachSet;
                 old_incomingSet = incomingSet;
             } else {
@@ -951,11 +947,19 @@ function makePuzzle(seed, fake, width, height) {
 
     // Set Length of Solution
     let length;
-    
     if(width >= height) {
         length = ((height * 3) / 4) + Math.seededRandom(height / 2);
     } else {
         length = ((width * 3) / 4) + Math.seededRandom(width / 2);
+    }
+
+    // Initialize Puzzle Array
+    var puzzle = [];
+    for(var i = 0; i < height; i++) {
+        puzzle[i] = [];
+        for(var j = 0; j < width; j++) {
+            puzzle[i].push(0);
+        }
     }
 
     var remainingStarts = [];
@@ -968,16 +972,6 @@ function makePuzzle(seed, fake, width, height) {
     var start = new Position(0,0);
     var goal;
     do {
-
-        // Initialize Puzzle Array
-        var puzzle = [];
-        for(var i = 0; i < height; i++) {
-            puzzle[i] = [];
-            for(var j = 0; j < width; j++) {
-                puzzle[i].push(0);
-            }
-        }
-
         // Initialize global Structures
         solution = [];
         solutionPositions = [];
@@ -1002,9 +996,9 @@ function makePuzzle(seed, fake, width, height) {
         start = remainingStarts.splice(Math.seededRandom(remainingStarts.length - 1), 1)[0];
         puzzle[start.y][start.x] = START;
 
-        solutionPositions[0].set(start.hash(), start);
+        solutionPositions[0].set(start.hash, start);
         playerPositions.splice(0,1,start);
-        playerPositions_hash.splice(0,1,start.hash());
+        playerPositions_hash.splice(0,1,start.hash);
         blockPositions.splice(0,1,start);
 
         goal = generatePath(puzzle, height, width, length);
