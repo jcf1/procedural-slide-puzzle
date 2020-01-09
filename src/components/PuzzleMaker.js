@@ -5,11 +5,6 @@ function Position(y, x) {
     this.x = x;
     this.hash = y+","+x;
 }
-/*
-Position.prototype.hash = function() {
-    return this.y+","+this.x;
-}
-*/
 //===================================================
 
 //===================================================
@@ -65,29 +60,6 @@ var blockPositions;
 // ArrayList<ArrayList<LinkedList<Position>>>
 var unusedNextPositions;
 //===================================================
-
-function printSolution() {
-    let solution_text = []
-    for(var i = 0; i < solution.length; i++) {
-        switch(solution[i]) {
-            case LEFT:
-                solution_text.push("LEFT");
-                break;
-            case RIGHT:
-                solution_text.push("RIGHT");
-                break;
-            case UP:
-                solution_text.push("UP");
-                break;
-            case DOWN:
-                solution_text.push("DOWN");
-                break;
-            default:
-                break;
-        }
-    }
-    console.log(solution_text);
-}
 
 function oppositeDirection(action) {
     switch(action) {

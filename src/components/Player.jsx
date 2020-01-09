@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Square from './Square.jsx';
-import { UP,LEFT,DOWN,RIGHT,NONE,LOCK } from '../helpers/constants';
+import { UP,LEFT,DOWN,RIGHT } from '../helpers/constants';
 
 export default class Player extends Component {
     
