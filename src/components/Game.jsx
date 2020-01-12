@@ -3,7 +3,7 @@ import Board from './Board';
 import PuzzleMaker from './PuzzleMaker';
 
 const getRandomSeed = () => {
-    return Math.floor(Math.random() * 1000000);
+    return Math.floor(Math.random() * 1000000000);
 }
 
 export default class Game extends Component {
@@ -34,6 +34,10 @@ export default class Game extends Component {
 
     buttonClicked = () => {
         let seed = document.getElementById("seed-box").value;
+        if(seed < 0 || seed > 1000000000) {
+            seed = getRandomSeed();;
+            document.getElementById("seed-box").value = seed;
+        } 
         this.setState({seed: seed});
         this.makeNewPuzzle(seed);
     }
@@ -55,12 +59,13 @@ export default class Game extends Component {
         this.buttonClicked();
     }
     
+    //<input type="number" min="0" onChange={() => this.value = Math.floor(Math.max(this.value,0))} id="seed-box" defaultValue={getRandomSeed()} />
     render() {
         return (
             <div className="game-options">
                 <div>
                     <label>Random Seed:</label>
-                    <input type="number" id="seed-box" defaultValue={getRandomSeed()} />
+                    <input type="number" min="0" id="seed-box" defaultValue={getRandomSeed()} />
                 </div>
                 <div>
                     <label>Add Fake Blocks:</label>
