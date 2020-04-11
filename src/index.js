@@ -8,7 +8,7 @@ render(
   <div>
     <div>
       <header>
-        <h1>Procedural Puzzle</h1>
+        <h1>Procedural Slide Puzzles</h1>
       </header>
     </div>
     <Game/>
