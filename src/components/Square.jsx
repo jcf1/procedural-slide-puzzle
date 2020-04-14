@@ -8,6 +8,7 @@ const style = ({ size, position, color }) => {
         top: position.top + '%',
         left: position.left + '%',
         backgroundColor: color,
+        //border: "1px solid #ff0000"
         border: "1px solid #ffffff"
     };
 };
