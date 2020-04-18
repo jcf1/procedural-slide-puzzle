@@ -3,8 +3,10 @@ import React from 'react';
 const style = ({ size, position, color }) => {
     return {
         position: "absolute",
-        width: size.width + "%",
-        height: size.height + "%",
+        width: size.width + "px",
+        height: size.height + "px",
+        //width: size.width + "%",
+        //height: size.height + "%",
         top: position.top + '%',
         left: position.left + '%',
         backgroundColor: color,

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Board from './Board';
 import PuzzleMaker from './PuzzleMaker';
+import { DESCRIPTION } from '../helpers/constants';
 
 const getRandomSeed = () => {
     return Math.floor(Math.random() * 1000000000);
@@ -77,7 +78,13 @@ export default class Game extends Component {
                 <div>
                     <button onClick={this.newSeed.bind(this)}>Random Seed</button>
                 </div>
-                < Board seed={this.state.seed} current={this.state.current} width={this.state.width} height={this.state.height} start={this.state.start} goal={this.state.goal} blocks={this.state.blocks} reset={this.reset.bind(this)} />
+                <div>
+                    < Board seed={this.state.seed} current={this.state.current} width={this.state.width} height={this.state.height} start={this.state.start} goal={this.state.goal} blocks={this.state.blocks} reset={this.reset.bind(this)} />
+                </div>
+                {
+                    DESCRIPTION.map((text) => 
+                    <div margin="2px auto">{text}</div>)
+                }
             </div>
         );
     }

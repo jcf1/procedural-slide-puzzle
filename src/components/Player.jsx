@@ -11,7 +11,7 @@ export default class Player extends Component {
         var block;
         var i;
 
-        let size = this.props.size;
+        let size = this.props.size_percent;
         let pos = this.props.position;
         let goal = this.props.goal;
         let blocks = this.props.blocks;
