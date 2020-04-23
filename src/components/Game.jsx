@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Board from './Board';
 import PuzzleMaker from './PuzzleMaker';
-import { DESCRIPTION } from '../helpers/constants';
+import { DESCRIPTION,SCREEN_RATIO } from '../helpers/constants';
 
 const getRandomSeed = () => {
     return Math.floor(Math.random() * 1000000000);
@@ -13,6 +13,10 @@ export default class Game extends Component {
         super(props);
 
         this.state = {
+            windowSize: {
+                width: 0,
+                height: 0
+            },
             start: {y: 0, x: 0},
             goal: {y: 0, x: 0},
             blocks: [],
@@ -24,6 +28,7 @@ export default class Game extends Component {
         }
 
         this.buttonClicked = this.buttonClicked.bind(this);
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
     makeNewPuzzle = (seed) => {
@@ -58,9 +63,18 @@ export default class Game extends Component {
 
     componentDidMount() {
         this.buttonClicked();
+        this.updateWindowDimensions();
+        window.addEventListener("resize", this.updateWindowDimensions.bind(this));
     }
     
-    //<input type="number" min="0" onChange={() => this.value = Math.floor(Math.max(this.value,0))} id="seed-box" defaultValue={getRandomSeed()} />
+      componentWillUnmount() {
+        window.removeEventListener("resize", this.updateWindowDimensions.bind(this));
+      }
+    
+      updateWindowDimensions() {
+        this.setState({ windowSize : { width: window.innerWidth, height: window.innerHeight } });
+      }
+    
     render() {
         return (
             <div className="game-options">
@@ -79,11 +93,11 @@ export default class Game extends Component {
                     <button onClick={this.newSeed.bind(this)}>Random Seed</button>
                 </div>
                 <div>
-                    < Board seed={this.state.seed} current={this.state.current} width={this.state.width} height={this.state.height} start={this.state.start} goal={this.state.goal} blocks={this.state.blocks} reset={this.reset.bind(this)} />
+                    < Board seed={this.state.seed} boardSize={(this.state.windowSize.width > this.state.windowSize.height ? this.state.windowSize.height : this.state.windowSize.width) * SCREEN_RATIO} current={this.state.current} width={this.state.width} height={this.state.height} start={this.state.start} goal={this.state.goal} blocks={this.state.blocks} reset={this.reset.bind(this)} />
                 </div>
                 {
-                    DESCRIPTION.map((text) => 
-                    <div margin="2px auto">{text}</div>)
+                    DESCRIPTION.map((text,i) => 
+                    <div key={i} margin="2px auto">{text}</div>)
                 }
             </div>
         );

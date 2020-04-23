@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Player from './Player';
 import Goal from './Goal';
 import Block from './Block';
-import { UP,LEFT,DOWN,RIGHT,NONE,LOCK,UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY,SCREEN_RATIO } from '../helpers/constants';
+import { UP,LEFT,DOWN,RIGHT,NONE,LOCK,UP_KEY,DOWN_KEY,LEFT_KEY,RIGHT_KEY } from '../helpers/constants';
 
 export default class Board extends Component {
 
@@ -10,9 +10,9 @@ export default class Board extends Component {
     return {
       position: "relative",
       margin: "1% auto",
-      width: this.state.boardSize.width + "px",
-      height: this.state.boardSize.height + "px",
-      border: (this.state.boardSize.height/100) + "px solid #000000"
+      width: this.props.boardSize + "px",
+      height: this.props.boardSize + "px",
+      border: (this.props.boardSize/100) + "px solid #000000"
     }
   }
 
@@ -20,10 +20,6 @@ export default class Board extends Component {
     super(props);
 
     this.state = {
-      boardSize: {
-        width: 0,
-        height: 0
-      },
       blockSize: {
         width: 0,
         height: 0,
@@ -39,7 +35,6 @@ export default class Board extends Component {
       blocks: []
     };
 
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.playerDeath = this.playerDeath.bind(this);
     this.playerStop = this.playerStop.bind(this);
@@ -126,8 +121,8 @@ export default class Board extends Component {
   }
 
   update() {
-    let blockWidth  = (((100.0/this.props.width)/100.0) * this.state.boardSize.width) - 2;
-    let blockHeight = (((100.0/this.props.height)/100.0) * this.state.boardSize.height) - 2;
+    let blockWidth  = (((100.0/this.props.width)/100.0) * this.props.boardSize) - 2;
+    let blockHeight = (((100.0/this.props.height)/100.0) * this.props.boardSize) - 2;
     let blockBorder = 1;
 
     let blockWidth_percent = 100.0/this.props.width;
@@ -151,28 +146,14 @@ export default class Board extends Component {
   }
   
   componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener("resize", this.updateWindowDimensions.bind(this));
     this.setState({ playerPos: this.props.start });
     window.onkeydown = this.handleKeyPress;
     this.playerInterval = setInterval(this.updatePlayerPos, 15);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateWindowDimensions.bind(this));
   }
   
   componentDidUpdate(prevProps) {
     if(this.props.seed !== prevProps.seed || (this.props.blocks.length !== prevProps.blocks.length)) {
       this.update();
-    }
-  }
-
-  updateWindowDimensions() {
-    if(window.innerHeight < window.innerWidth) {
-      this.setState({ boardSize : { width: window.innerHeight * SCREEN_RATIO, height: window.innerHeight * SCREEN_RATIO } });
-    } else {
-      this.setState({ boardSize : { width: window.innerWidth * SCREEN_RATIO, height: window.innerWidth * SCREEN_RATIO } });
     }
   }
 
@@ -183,7 +164,7 @@ export default class Board extends Component {
             <center><h2>Current Seed: {this.props.current}</h2></center>  
           </div>
           <div style={this.style()}>
-            < Player size={this.state.blockSize} size_percent={this.state.blockSize_percent} position={this.state.playerPos} direction={this.state.playerDir} boardSize={this.state.boardSize} blocks={this.state.blocks} goal={this.state.goalPos} win={this.win} playerDeath={this.playerDeath} playerStop={this.playerStop} />
+            < Player size={this.state.blockSize} size_percent={this.state.blockSize_percent} position={this.state.playerPos} direction={this.state.playerDir} blocks={this.state.blocks} goal={this.state.goalPos} win={this.win} playerDeath={this.playerDeath} playerStop={this.playerStop} />
             < Goal size={this.state.blockSize} position={this.state.goalPos} />
             {
               this.state.blocks.map((block,i) => 

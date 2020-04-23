@@ -5,12 +5,9 @@ const style = ({ size, position, color }) => {
         position: "absolute",
         width: size.width + "px",
         height: size.height + "px",
-        //width: size.width + "%",
-        //height: size.height + "%",
         top: position.top + '%',
         left: position.left + '%',
         backgroundColor: color,
-        //border: "1px solid #ff0000"
         border: "1px solid #ffffff"
     };
 };
