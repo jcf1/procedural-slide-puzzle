@@ -6,4 +6,4 @@ All the code for how the puzzle is generated can be found in src/components/Puzz
 
 Written in Javascript and React.
 
-Thanks for haing a look. Have a good day :)
+Thanks for having a look. Have a good day :)
