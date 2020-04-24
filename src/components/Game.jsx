@@ -95,10 +95,12 @@ export default class Game extends Component {
                 <div>
                     < Board seed={this.state.seed} boardSize={(this.state.windowSize.width > this.state.windowSize.height ? this.state.windowSize.height : this.state.windowSize.width) * SCREEN_RATIO} current={this.state.current} width={this.state.width} height={this.state.height} start={this.state.start} goal={this.state.goal} blocks={this.state.blocks} reset={this.reset.bind(this)} />
                 </div>
-                {
-                    DESCRIPTION.map((text,i) => 
-                    <div key={i} margin="2px auto">{text}</div>)
-                }
+                <div style={{textAlign:"center"}}>
+                    {
+                        DESCRIPTION.map((text,i) => 
+                        <div key={i} style={{margin:"0 auto", width : (this.state.windowSize.width * 0.75)+"px"}}>{text}</div>)
+                    }
+                </div>
             </div>
         );
     }
