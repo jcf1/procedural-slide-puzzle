@@ -1003,3 +1003,4 @@ var PuzzleMaker = {
 }
 
 module.exports = PuzzleMaker;
+export default PuzzleMaker;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Board from './Board';
-import PuzzleMaker from './PuzzleMaker';
+import PuzzleMaker from './PuzzleMaker.js';
 import { SCREEN_RATIO } from '../helpers/constants';
 
 const getRandomSeed = () => {
