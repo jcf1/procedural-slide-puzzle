@@ -1002,5 +1002,5 @@ var PuzzleMaker = {
     makePuzzle
 }
 
-module.exports = PuzzleMaker;
+//module.exports = PuzzleMaker;
 export default PuzzleMaker;
