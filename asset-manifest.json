@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/procedural-slide-puzzle/static/js/main.6104c8ed.chunk.js",
-    "main.js.map": "/procedural-slide-puzzle/static/js/main.6104c8ed.chunk.js.map",
+    "main.js": "/procedural-slide-puzzle/static/js/main.688bc480.chunk.js",
+    "main.js.map": "/procedural-slide-puzzle/static/js/main.688bc480.chunk.js.map",
     "runtime-main.js": "/procedural-slide-puzzle/static/js/runtime-main.e396c28a.js",
     "runtime-main.js.map": "/procedural-slide-puzzle/static/js/runtime-main.e396c28a.js.map",
-    "static/js/2.8a3674a7.chunk.js": "/procedural-slide-puzzle/static/js/2.8a3674a7.chunk.js",
-    "static/js/2.8a3674a7.chunk.js.map": "/procedural-slide-puzzle/static/js/2.8a3674a7.chunk.js.map",
+    "static/js/2.a6464019.chunk.js": "/procedural-slide-puzzle/static/js/2.a6464019.chunk.js",
+    "static/js/2.a6464019.chunk.js.map": "/procedural-slide-puzzle/static/js/2.a6464019.chunk.js.map",
     "index.html": "/procedural-slide-puzzle/index.html",
-    "precache-manifest.7c27895f55742959d66946f61972229e.js": "/procedural-slide-puzzle/precache-manifest.7c27895f55742959d66946f61972229e.js",
+    "precache-manifest.387b53cd298aae93d4696e8bd97a73ea.js": "/procedural-slide-puzzle/precache-manifest.387b53cd298aae93d4696e8bd97a73ea.js",
     "service-worker.js": "/procedural-slide-puzzle/service-worker.js",
-    "static/js/2.8a3674a7.chunk.js.LICENSE.txt": "/procedural-slide-puzzle/static/js/2.8a3674a7.chunk.js.LICENSE.txt"
+    "static/js/2.a6464019.chunk.js.LICENSE.txt": "/procedural-slide-puzzle/static/js/2.a6464019.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.e396c28a.js",
-    "static/js/2.8a3674a7.chunk.js",
-    "static/js/main.6104c8ed.chunk.js"
+    "static/js/2.a6464019.chunk.js",
+    "static/js/main.688bc480.chunk.js"
   ]
 }
