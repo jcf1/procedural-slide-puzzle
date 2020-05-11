@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.js": "/procedural-slide-puzzle/static/js/main.4c7732b3.chunk.js",
+    "main.js.map": "/procedural-slide-puzzle/static/js/main.4c7732b3.chunk.js.map",
+    "runtime-main.js": "/procedural-slide-puzzle/static/js/runtime-main.b27b7355.js",
+    "runtime-main.js.map": "/procedural-slide-puzzle/static/js/runtime-main.b27b7355.js.map",
+    "static/js/2.a5a3acbb.chunk.js": "/procedural-slide-puzzle/static/js/2.a5a3acbb.chunk.js",
+    "static/js/2.a5a3acbb.chunk.js.map": "/procedural-slide-puzzle/static/js/2.a5a3acbb.chunk.js.map",
+    "index.html": "/procedural-slide-puzzle/index.html",
+    "precache-manifest.c5a10e65fdfef3c656c83e3e01e6a49d.js": "/procedural-slide-puzzle/precache-manifest.c5a10e65fdfef3c656c83e3e01e6a49d.js",
+    "service-worker.js": "/procedural-slide-puzzle/service-worker.js",
+    "static/js/2.a5a3acbb.chunk.js.LICENSE": "/procedural-slide-puzzle/static/js/2.a5a3acbb.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b27b7355.js",
+    "static/js/2.a5a3acbb.chunk.js",
+    "static/js/main.4c7732b3.chunk.js"
+  ]
+}
