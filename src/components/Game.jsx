@@ -79,7 +79,7 @@ export default class Game extends Component {
         return (
             <div className="game-options">
                 <div>
-                    <label>Random Seed:</label>
+                    <label>Current Seed:</label>
                     <input type="number" min="0" id="seed-box" defaultValue={getRandomSeed()} />
                 </div>
                 <div>
