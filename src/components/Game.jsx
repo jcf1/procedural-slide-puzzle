@@ -95,10 +95,6 @@ export default class Game extends Component {
                 <div>
                     < Board seed={this.state.seed} boardSize={(this.state.windowSize.width > this.state.windowSize.height ? this.state.windowSize.height : this.state.windowSize.width) * SCREEN_RATIO} current={this.state.current} width={this.state.width} height={this.state.height} start={this.state.start} goal={this.state.goal} blocks={this.state.blocks} reset={this.reset.bind(this)} />
                 </div>
-                <div style={{margin:"0 auto", width : (this.state.windowSize.width * 0.75)+"px"}}>
-                    <div><b>OBJECTIVE:</b>&emsp;Use the arrow keys to move the blue block to the red block by sliding and colliding with the black blocks. If you slide off the board, you will be put back into the starting position.</div>
-                    <div><b>OPTIONS:</b>&emsp;&emsp; Change the level by changing the "Random Seed" value above and clickint the "Make Puzzle" button. The "Random Seed" button will generate a new "Random Seed" for you. Setting the "Fake Blocks" option will add blocks that are not required for the level's solution to the board.</div>
-                </div>
             </div>
         );
     }
